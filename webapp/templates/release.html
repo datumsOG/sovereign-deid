@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Released — {{ doc.title }} — Sovereign{% endblock %}
+{% block content %}
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol class="crumbs">
+    <li><a href="/dashboard" class="btn-link">Sovereign</a></li>
+    <li><a href="/dashboard" class="btn-link">Documents</a></li>
+    <li><a href="/doc/{{ doc.doc_id }}" class="btn-link">{{ doc.title }}</a></li>
+    <li aria-current="page">Release</li>
+  </ol>
+  <span class="doc-id-badge">{{ doc.doc_id }}</span>
+</nav>
+
+<h1>Public release &mdash; {{ doc.title }}</h1>
+
+<div class="callout callout-success">
+  <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M20 6 9 17l-5-5"/>
+  </svg>
+  <div class="callout-body">
+    <strong>Released &mdash; irreversible</strong>
+    <p>This output carries no re-identification map and cannot be reversed. It is intended for publication or sharing outside the trust boundary. What is shown below is the final, publishable text.</p>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><span class="section-label">Result</span></div>
+  <p class="section-sub tabular-nums">
+    <strong class="tabular-nums">{{ result.deterministic_count }}</strong> identifier{{ 's' if result.deterministic_count != 1 }} removed by rule,
+    <strong class="tabular-nums">{{ result.advanced_count }}</strong> residual identifier{{ 's' if result.advanced_count != 1 }} found by the advanced pass.
+  </p>
+
+  {% set grouped = result.spans | groupby("category") %}
+  {% if grouped %}
+  <p class="section-sub" style="margin-top:14px;">Residual identifiers the advanced pass found and suppressed, by category. The identifier text itself is never shown or stored here &mdash; only what kind it was and how many.</p>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Category</th><th class="num">Count</th></tr></thead>
+      <tbody>
+      {% for category, items in grouped %}
+        <tr><td>{{ category }}</td><td class="num tabular-nums">{{ items | list | length }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="section-sub" style="margin-top:14px;">The advanced pass found no residual identifiers beyond the deterministic fields already covered by the vault map.</p>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <div class="panel-head"><span class="section-label">Released text</span></div>
+  <p class="section-sub">Every suppressed identifier is shown as a labelled token rather than removed silently, so the substitution is visible.</p>
+  <div class="doc-text" data-chips>{{ result.text }}</div>
+</div>
+
+<p><a class="btn-link" href="/doc/{{ doc.doc_id }}">&larr; back to {{ doc.title }}</a></p>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  Sovereign.markReleased({{ doc.doc_id | tojson }});
+</script>
+{% endblock %}

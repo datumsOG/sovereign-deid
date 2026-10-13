@@ -1,0 +1,12 @@
+{
+  "doc_id": "doc-003",
+  "title": "Discharge summary — adjustment disorder, resolved",
+  "identifiers": {
+    "patient_name": "Devon Achebe",
+    "dob": "2002-01-27",
+    "mrn": "MRN-19940",
+    "phone": "905-555-0176",
+    "address": "9 Maple Terrace, Mississauga, ON"
+  },
+  "note": "Devon Achebe (DOB 2002-01-27, MRN-19940, phone 905-555-0176, address 9 Maple Terrace, Mississauga, ON) is being discharged from active treatment following successful resolution of an adjustment disorder with anxious mood related to a recent job transition. Over eight sessions the patient developed effective coping strategies, reported sustained improvement in mood and functioning, and no longer meets criteria for the presenting diagnosis. No medications were prescribed during treatment. Patient was psychoeducated on early warning signs and given return-to-care instructions should symptoms recur. Overall prognosis is excellent."
+}

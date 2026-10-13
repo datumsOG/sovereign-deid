@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Sovereign{% endblock %}</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230b6d68'/%3E%3Cpath d='M12 5.5 18 8v4.3c0 3.7-2.5 6.6-6 7.7-3.5-1.1-6-4-6-7.7V8l6-2.5Z' fill='none' stroke='%23ffffff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/sovereign.css">
+</head>
+<body>
+<header class="app-header">
+  <a class="app-brand" href="/">
+    <span class="app-brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+        <path d="M12 4 19 6.8v5.1c0 4.4-3 8-7 9.1-4-1.1-7-4.7-7-9.1V6.8L12 4Z"/>
+      </svg>
+    </span>
+    <span class="app-brand-name">Sovereign</span>
+    <span class="app-brand-tagline">de-identify &middot; summarise &middot; re-identify</span>
+  </a>
+  {% if user %}
+  <div class="app-identity">
+    <div class="app-user">
+      <strong>{{ user.username }}</strong>
+      <span class="role-pill {{ 'is-admin' if user.role == 'admin' }}">{{ user.role }}</span>
+    </div>
+    <form method="post" action="/logout">
+      <button class="btn btn-sm" type="submit">Log out</button>
+    </form>
+  </div>
+  {% endif %}
+</header>
+<main class="{% block main_class %}main-wide{% endblock %}">
+{% block content %}{% endblock %}
+</main>
+<footer class="app-footer">
+  Synthetic demo data only &mdash; no real patient information is stored in this environment.
+</footer>
+<script src="/static/sovereign.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

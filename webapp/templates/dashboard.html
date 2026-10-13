@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Sovereign — Documents{% endblock %}
+{% block content %}
+<div class="explorer" data-explorer>
+
+  <nav class="crumbbar" aria-label="Breadcrumb">
+    <ol class="crumbs">
+      <li>Sovereign</li>
+      <li aria-current="page" id="crumb-current">Documents</li>
+    </ol>
+    <p class="crumb-meta">
+      {{ "Admin — de-identify, summarise, re-identify and export." if user.role == "admin"
+         else "Staff — de-identify, summarise and re-identify. Export is admin-only." }}
+    </p>
+  </nav>
+
+  <div class="explorer-body">
+
+    <aside class="explorer-sidebar" aria-label="Document filters">
+      <div class="sidebar-label">Locations</div>
+      <ul class="sidebar-list">
+        <li><button type="button" class="sidebar-item is-active" data-filter="all">
+          All documents <span class="count" id="count-all">{{ docs|length }}</span>
+        </button></li>
+        <li><button type="button" class="sidebar-item" data-filter="needs-review">
+          Needs review <span class="count" id="count-needs-review">0</span>
+        </button></li>
+        <li><button type="button" class="sidebar-item" data-filter="summarised">
+          Summarised <span class="count" id="count-summarised">0</span>
+        </button></li>
+        <li><button type="button" class="sidebar-item" data-filter="released">
+          Released <span class="count" id="count-released">0</span>
+        </button></li>
+      </ul>
+      <p class="sidebar-note">
+        Synthetic demo corpus. Status is read from the audit log, so every user sees the
+        same state on any device.
+      </p>
+    </aside>
+
+    <div class="explorer-main">
+
+      <div class="toolbar" role="toolbar" aria-label="Document actions">
+        <div class="toolbar-action">
+          <button type="button" class="btn btn-primary" id="btn-summarise" disabled>Summarise for internal use</button>
+          <p class="toolbar-hint">Reversible. Sends de-identified text to the trusted internal processor; the result can be re-identified later.</p>
+        </div>
+        <div class="toolbar-action">
+          <button type="button" class="btn btn-outline-accent" id="btn-release" disabled>De-identify for public release</button>
+          <p class="toolbar-hint">Irreversible. Produces a publication-ready copy with identifiers permanently redacted.</p>
+        </div>
+        <div class="toolbar-progress" id="toolbar-progress" hidden>
+          <span class="toolbar-spinner" aria-hidden="true"></span>
+          <span id="toolbar-progress-text" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <div class="explorer-scroll">
+        <table class="explorer-table" id="doc-table">
+          <thead>
+            <tr>
+              <th class="col-check"><input type="checkbox" id="select-all" aria-label="Select all documents"></th>
+              <th class="col-icon" aria-hidden="true"></th>
+              <th class="sortable" data-sort="name">Name <span class="sort-arrow" aria-hidden="true">▴</span></th>
+              <th class="sortable col-status" data-sort="status">Status <span class="sort-arrow" aria-hidden="true">▴</span></th>
+              <th class="sortable col-identifiers" data-sort="identifiers">Identifiers <span class="sort-arrow" aria-hidden="true">▴</span></th>
+              <th class="sortable col-lastaction" data-sort="lastaction">Last action <span class="sort-arrow" aria-hidden="true">▴</span></th>
+              <th class="sortable col-size" data-sort="size">Size <span class="sort-arrow" aria-hidden="true">▴</span></th>
+            </tr>
+          </thead>
+          <tbody id="doc-tbody">
+          {% for d in docs %}
+            <tr class="doc-row" data-doc-id="{{ d.doc_id }}" data-name="{{ d.title|lower }}"
+                data-status="{{ d.status|lower }}" data-identifiers="{{ d.identifiers_count }}"
+                data-lastaction="{{ d.last_ts }}" data-size="{{ d.size }}" tabindex="0">
+              <td class="col-check"><input type="checkbox" class="row-check" aria-label="Select {{ d.title }}"></td>
+              <td class="col-icon" aria-hidden="true">
+                <svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+                  <path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/>
+                  <path d="M14 3v5h5"/>
+                </svg>
+              </td>
+              <td class="col-name">
+                <div class="doc-name-cell">
+                  <a href="/doc/{{ d.doc_id }}">{{ d.title }}</a>
+                  <span class="doc-id-sub">{{ d.doc_id }}</span>
+                </div>
+              </td>
+              <td class="col-status">
+                <span class="pill {{ {'Original':'pill-review','De-identified':'pill-deid','Summarised':'pill-summarised','Released':'pill-released'}.get(d.status,'pill-review') }}"
+                      data-status-pill>{{ d.status }}</span>
+              </td>
+              <td class="col-identifiers" data-cell="identifiers">{{ d.identifiers_count }}</td>
+              <td class="col-lastaction" data-cell="lastaction">{{ d.last_ts[:10] if d.last_ts else "—" }}</td>
+              <td class="col-size" data-cell="size">{{ d.size }} B</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="7">No documents in the vault.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="statusbar">
+        <span id="statusbar-text">{{ docs|length }} item{{ "s" if docs|length != 1 else "" }}, 0 selected</span>
+        <span>Ctrl/Cmd-click to toggle &middot; Shift-click to select a range</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

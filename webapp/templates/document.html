@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}{{ doc.title }} — Sovereign{% endblock %}
+{% block content %}
+
+<nav class="crumbbar" aria-label="Breadcrumb">
+  <ol class="crumbs">
+    <li><a href="/dashboard" class="btn-link">Documents</a></li>
+    <li aria-current="page" class="crumb-current">{{ doc.title }}</li>
+  </ol>
+  <span class="doc-id-badge">{{ doc.doc_id }}</span>
+</nav>
+
+<h1>{{ doc.title }}</h1>
+
+{# ---------------------------------------------------------------- runner --#}
+<form class="panel" method="post" action="/doc/{{ doc.doc_id }}/run" id="runner">
+  <div class="panel-head"><span class="section-label">Choose operations</span></div>
+  <p class="section-sub">Tick what to run, then press <strong>Run selected</strong>. Prerequisites are added automatically — a summary cannot be produced without the placeholder map, because the map is what keeps identifiers out of the outbound text.</p>
+
+  <ul class="oplist">
+    <li class="op {{ 'is-done' if 'deterministic' in (results.ran if results else []) else '' }}">
+      <label class="op-label">
+        <input type="checkbox" name="ops" value="deterministic"
+               {{ 'checked' if not results or 'deterministic' in selected else '' }}>
+        <span class="op-check" aria-hidden="true"></span>
+        <span class="op-body">
+          <span class="op-name">Deterministic de-identification</span>
+          <span class="op-desc">Rule-based. Strips the structured identifiers into an encrypted map.</span>
+        </span>
+      </label>
+    </li>
+    <li class="op {{ 'is-done' if 'advanced' in (results.ran if results else []) else '' }}">
+      <label class="op-label">
+        <input type="checkbox" name="ops" value="advanced"
+               {{ 'checked' if results and 'advanced' in selected else '' }}>
+        <span class="op-check" aria-hidden="true"></span>
+        <span class="op-body">
+          <span class="op-name">AI de-identification <span class="op-tag">public release</span></span>
+          <span class="op-desc">Finds identifiers in the prose that no rule can catch. Irreversible.</span>
+        </span>
+      </label>
+    </li>
+    <li class="op {{ 'is-done' if 'summary' in (results.ran if results else []) else '' }}">
+      <label class="op-label">
+        <input type="checkbox" name="ops" value="summary"
+               {{ 'checked' if results and 'summary' in selected else '' }}>
+        <span class="op-check" aria-hidden="true"></span>
+        <span class="op-body">
+          <span class="op-name">Clinical summary</span>
+          <span class="op-desc">Sends only placeholdered text to the trusted processor.</span>
+        </span>
+      </label>
+    </li>
+    <li class="op {{ 'is-done' if 'reidentify' in (results.ran if results else []) else '' }}">
+      <label class="op-label">
+        <input type="checkbox" name="ops" value="reidentify"
+               {{ 'checked' if results and 'reidentify' in selected else '' }}>
+        <span class="op-check" aria-hidden="true"></span>
+        <span class="op-body">
+          <span class="op-name">Re-identify summary</span>
+          <span class="op-desc">Restores the real values from the vault, for internal use.</span>
+        </span>
+      </label>
+    </li>
+  </ul>
+
+  <div class="runner-foot">
+    <button class="btn btn-primary btn-run" type="submit">Run selected</button>
+    <span class="action-hint" id="run-hint"></span>
+  </div>
+
+  {% if results and results.errors %}
+    {% for op, msg in results.errors.items() %}
+      <p class="op-error"><strong>{{ op }}:</strong> {{ msg }}</p>
+    {% endfor %}
+  {% endif %}
+</form>
+
+{# ---------------------------------------------------------------- output --#}
+<div class="panel">
+  <div class="panel-head"><span class="section-label">Original note</span></div>
+  <p class="section-sub">As entered by the clinician — contains identifying information.</p>
+  <div class="doc-text">{{ doc.note }}</div>
+</div>
+
+{% if results and results.deid_text %}
+<div class="panel">
+  <div class="panel-head">
+    <span class="section-label">1 · Deterministically de-identified</span>
+    <span class="pill pill-deid">{{ results.deid_count }} removed by rule</span>
+  </div>
+  <p class="section-sub">Structured identifiers replaced. Note what is <em>still here</em> — names, places and organisations sitting in ordinary prose.</p>
+  <div class="doc-text" data-chips>{{ results.deid_text }}</div>
+</div>
+{% endif %}
+
+{% if results and results.release %}
+<div class="panel">
+  <div class="panel-head">
+    <span class="section-label">2 · AI de-identified — publication ready</span>
+    <span class="pill pill-released">{{ results.release.advanced_count }} found in prose</span>
+  </div>
+  <p class="section-sub">{{ results.release.deterministic_count }} identifiers removed by rule, then {{ results.release.advanced_count }} more found in free text and suppressed locally. Irreversible — no map is kept.</p>
+  <div class="doc-text" data-chips>{{ results.release.text }}</div>
+  {% if results.release.spans %}
+  <div class="span-summary">
+    <span class="section-label">Suppressed</span>
+    <ul class="span-list">
+      {% for cat, items in results.release.spans | groupby("category") %}
+        <li><span class="span-cat">{{ cat.replace('_', ' ') | lower }}</span> <span class="span-count">{{ items | length }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if (results.summary_deid if results else summary_deid) %}
+<div class="panel">
+  <div class="panel-head"><span class="section-label">3 · Clinical summary (de-identified)</span></div>
+  <p class="section-sub">Returned by the trusted processor. Placeholders preserved exactly — it never saw a real identifier.</p>
+  <div class="doc-text" data-chips>{{ results.summary_deid if results else summary_deid }}</div>
+</div>
+{% endif %}
+
+{% if summary_identified %}
+<div class="panel">
+  <div class="panel-head"><span class="section-label">4 · Re-identified summary</span></div>
+  <p class="section-sub">Real values restored from the vault. Internal clinical use only.</p>
+  <div class="doc-text" data-chips>{{ summary_identified }}</div>
+</div>
+{% endif %}
+
+{% if is_admin and summary_identified %}
+<div class="panel panel-quiet">
+  <a class="btn btn-sm" href="/doc/{{ doc.doc_id }}/export">Export re-identified summary (admin)</a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Prerequisites, mirrored from OP_REQUIRES in main.py. The server enforces these;
+  // this only makes the implication visible before submitting.
+  (function () {
+    var requires = {
+      deterministic: [],
+      advanced: ["deterministic"],
+      summary: ["deterministic"],
+      reidentify: ["deterministic", "summary"]
+    };
+    var form = document.getElementById("runner");
+    if (!form) return;
+    var boxes = {};
+    form.querySelectorAll('input[name="ops"]').forEach(function (b) { boxes[b.value] = b; });
+    var hint = document.getElementById("run-hint");
+
+    function sync(changed) {
+      if (changed && changed.checked) {
+        (requires[changed.value] || []).forEach(function (dep) {
+          if (boxes[dep]) { boxes[dep].checked = true; }
+        });
+      }
+      var n = Object.keys(boxes).filter(function (k) { return boxes[k].checked; }).length;
+      hint.textContent = n === 0 ? "Nothing selected."
+        : n + " operation" + (n === 1 ? "" : "s") + " will run, in order.";
+      form.querySelector(".btn-run").disabled = n === 0;
+    }
+    Object.keys(boxes).forEach(function (k) {
+      boxes[k].addEventListener("change", function () { sync(boxes[k]); });
+    });
+    sync(null);
+  })();
+</script>
+{% endblock %}

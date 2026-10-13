@@ -1,0 +1,24 @@
+{
+  "resourceType": "Bundle",
+  "entry": [
+    {"resource": {
+      "resourceType": "Patient",
+      "id": "AAAA-1111",
+      "name": [{"family": "Testfamily", "given": ["Testgiven"]}],
+      "telecom": [{"system": "phone", "value": "555-0100"}],
+      "gender": "female",
+      "birthDate": "1980-04-15",
+      "identifier": [
+        {"system": "http://hl7.org/fhir/sid/us-ssn", "value": "999-00-0000"},
+        {"system": "urn:mrn", "value": "MRN-123"}
+      ],
+      "address": [{"line": ["1 Fake St"], "city": "Toronto", "state": "ON", "postalCode": "M5V 2T6"}],
+      "maritalStatus": {"text": "M"}
+    }},
+    {"resource": {
+      "resourceType": "Encounter", "id": "ENC-1",
+      "subject": {"reference": "Patient/AAAA-1111"},
+      "period": {"start": "2021-06-01T10:00:00Z", "end": "2021-06-01T11:00:00Z"}
+    }}
+  ]
+}

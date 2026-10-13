@@ -1,0 +1,12 @@
+{
+  "doc_id": "doc-001",
+  "title": "Intake note — anxiety, initial assessment",
+  "identifiers": {
+    "patient_name": "Jordan Marlowe",
+    "dob": "1991-04-12",
+    "mrn": "MRN-48213",
+    "phone": "416-555-0142",
+    "address": "118 Birchwood Crescent, Toronto, ON"
+  },
+  "note": "Jordan Marlowe (DOB 1991-04-12, MRN-48213) presented for an initial intake assessment reporting a six-month history of generalized anxiety with associated insomnia and difficulty concentrating at work. Patient can be reached at 416-555-0142 and resides at 118 Birchwood Crescent, Toronto, ON. No prior psychiatric history. Denies suicidal ideation. Reports moderate caffeine intake and irregular sleep schedule. Mental status exam: alert, oriented, mood anxious, affect congruent, speech normal rate and rhythm, thought process linear, no perceptual disturbances. Plan: begin weekly CBT sessions focused on anxiety management, provide sleep hygiene psychoeducation, reassess in six sessions."
+}

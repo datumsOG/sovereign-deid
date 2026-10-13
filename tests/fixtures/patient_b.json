@@ -1,0 +1,24 @@
+{
+  "resourceType": "Bundle",
+  "entry": [
+    {"resource": {
+      "resourceType": "Patient",
+      "id": "BBBB-2222",
+      "name": [{"family": "Otherfamily", "given": ["Othergiven"]}],
+      "telecom": [{"system": "phone", "value": "555-0101"}],
+      "gender": "male",
+      "birthDate": "1979-11-02",
+      "identifier": [
+        {"system": "http://hl7.org/fhir/sid/us-ssn", "value": "888-00-0001"},
+        {"system": "urn:mrn", "value": "MRN-456"}
+      ],
+      "address": [{"line": ["2 Fake Ave"], "city": "Toronto", "state": "ON", "postalCode": "M5V 1A1"}],
+      "maritalStatus": {"text": "S"}
+    }},
+    {"resource": {
+      "resourceType": "Encounter", "id": "ENC-2",
+      "subject": {"reference": "Patient/BBBB-2222"},
+      "period": {"start": "2021-06-01T14:00:00Z", "end": "2021-06-01T15:00:00Z"}
+    }}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "doc_id": "doc-002",
+  "title": "Follow-up note — mood disorder, session 4",
+  "identifiers": {
+    "patient_name": "Priya Chandrasekaran",
+    "dob": "1978-11-02",
+    "mrn": "MRN-77031",
+    "phone": "647-555-0198",
+    "address": "22 Lakeshore Blvd, Etobicoke, ON"
+  },
+  "note": "Priya Chandrasekaran (DOB 1978-11-02, MRN-77031, contact 647-555-0198, address 22 Lakeshore Blvd, Etobicoke, ON) returns for session four of ongoing treatment for major depressive disorder, moderate severity. Patient reports modest improvement in energy and appetite since starting behavioural activation homework. Sleep remains disrupted with early morning waking. PHQ-9 administered, score improved from prior session. No safety concerns identified; patient denies any thoughts of self-harm. Discussed continuing current psychotherapy approach and considering a referral to psychiatry for medication consultation if symptoms plateau. Patient agreeable to plan and will continue mood tracking between sessions."
+}

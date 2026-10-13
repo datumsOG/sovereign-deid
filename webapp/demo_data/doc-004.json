@@ -1,0 +1,12 @@
+{
+  "doc_id": "doc-004",
+  "title": "Progress note — PTSD, session 11 (free-text identifiers)",
+  "identifiers": {
+    "patient_name": "Marcus Oyelaran",
+    "dob": "1989-06-30",
+    "mrn": "MRN-40218",
+    "phone": "416-555-0173",
+    "address": "51 Wychwood Ave, Toronto, ON"
+  },
+  "note": "Marcus Oyelaran (DOB 1989-06-30, MRN-40218, contact 416-555-0173, address 51 Wychwood Ave, Toronto, ON) attended session eleven. Ongoing treatment for post-traumatic stress following the workplace incident. Reports nightmares reduced from most nights to roughly two per week since we began the trauma-focused protocol. Continues to avoid the stretch of Dupont near the old depot where the incident occurred, and has not returned to work at Kelford Logistics since February. His sister Amara drives him to appointments and waits in the car; he says he has not told their mother the full extent of it. Sleep still poor. He mentioned that Dr. Whitfield at Sunnybrook adjusted the prazosin dose last month and that he is due back there in the autumn. Mood improved on self-report. Denies suicidal ideation. Discussed a graded return-to-work plan and whether to involve his union representative. Plan: continue weekly sessions, review the avoidance hierarchy next week, coordinate with the prescriber before any further medication change."
+}
