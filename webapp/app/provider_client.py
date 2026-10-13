@@ -1,6 +1,6 @@
 """Provider API client — OpenAI-compatible chat completions endpoint.
 
-base_url/key come from (internal path) via app.config (never hardcoded, never
+base_url/key come from provider.env via app.config (never hardcoded, never
 logged). Every call MUST pass through app.deid_roundtrip.outbound_gate() first — this
 module does not gate itself, callers (main.py) are required to gate before invoking it,
 and a test asserts the route wiring does so.

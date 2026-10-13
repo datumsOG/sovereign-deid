@@ -1,7 +1,7 @@
 """Sovereign webapp — paths, secret bootstrap, env loading.
 
 Secrets policy (Sovereign Rule #1 extends to this component):
-- Provider API key is loaded from (internal path) — never hardcoded, never logged.
+- Provider API key is loaded from provider.env — never hardcoded, never logged.
 - Session-signing secret and the vault (re-id map) encryption key are generated on first
   run into webapp/secrets/ (0600, gitignored) — never committed, never printed after
   creation.

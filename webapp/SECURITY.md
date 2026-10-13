@@ -42,7 +42,7 @@ directly. Does NOT assume nation-state-level TLS/crypto attacks are in scope for
    (actor, role, action, doc_id, timestamp). Actions are drawn from a fixed allow-list;
    `detail` is truncated and is a convention-enforced "short status string only" field —
    see Known Gaps below for why this isn't provably PHI-free.
-6. **Secrets discipline.** Provider key/base URL loaded from `(internal path)` only
+6. **Secrets discipline.** Provider key/base URL loaded from `provider.env` only
    (never hardcoded, never logged — the client module's error path deliberately logs
    only the exception type, never the request/response body). Session-signing secret and
    vault key are generated locally, never committed, never printed.
